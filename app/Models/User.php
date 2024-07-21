@@ -81,4 +81,6 @@ class User extends Authenticatable
         return $this->belongsToMany(Asrama::class, 'asrama_teacher', 'user_id', 'asrama_id')
                     ->withPivot('academic_year', 'semester');
     }
+
+   
 }

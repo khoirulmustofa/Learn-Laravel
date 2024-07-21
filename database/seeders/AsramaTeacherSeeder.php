@@ -20,12 +20,13 @@ class AsramaTeacherSeeder extends Seeder
 
         $academicYear = "20232024";
         $semester = 1;
-        $userIds = User::pluck('id')->toArray();
+        $userIds = User::limit($asramas->count())->orderBy('id')->pluck('id')->toArray();
 
-        foreach ($asramas as $asrama) {
+
+        foreach ($asramas as $key => $value) {
             AsramaTeacher::create([
-                'user_id' => fake()->unique()->randomElement($userIds),
-                'asrama_id' => $asrama->id,
+                'user_id' => $userIds[$key],
+                'asrama_id' => $value->id,
                 'academic_year' => $academicYear, // Contoh tahun ajaran
                 'semester' => $semester, // Contoh semester
             ]);

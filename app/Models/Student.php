@@ -32,4 +32,9 @@ class Student extends Model
             ->withTimestamps();
     }
 
+    public function kbmPresensis()
+    {
+        return $this->hasMany(KbmPresensi::class);
+    }
+
 }

@@ -91,9 +91,14 @@ class ManyToManyController extends Controller
                     'teacher' => optional(optional($student->asramas->first())->teachers->first())->name,
                 ];
             });
-           
+
+            // Filter collection where class contains 'A'
+            $filteredStudents = $studentsMap->filter(function ($student) {
+                return strpos($student['class'], 'A') !== false;
+            });
+
             // Sort the filtered collection by class and name
-            $data['studentsSorted'] = $studentsMap->sortBy([
+            $data['studentsSorted'] = $filteredStudents->sortBy([
                 ['class', 'asc'],
                 ['name', 'asc'],
             ]);

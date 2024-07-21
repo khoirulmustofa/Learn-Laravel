@@ -15,6 +15,8 @@ class ClassModel extends Model
 
     public function students()
     {
-        return $this->belongsToMany(Student::class, 'class_student', 'class_id', 'student_id');
+        return $this->belongsToMany(Student::class, 'class_student', 'class_id', 'student_id')
+            ->withPivot('academic_year', 'semester', 'status')
+            ->withTimestamps();
     }
 }
