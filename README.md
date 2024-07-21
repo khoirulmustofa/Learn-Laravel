@@ -48,6 +48,56 @@ class Profile extends Model
 }
 ```
 
+
+## One to Many
+
+`User.php` model:
+
+```php
+namespace App;
+
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+
+class User extends Authenticatable
+{
+    use Notifiable;
+
+    /**
+     * Define the relationship between the given user and the posts he/she created.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
+}
+```
+
+`Post.php` model:
+
+```php
+namespace App;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Post extends Model
+{
+    /**
+     * Define the relationship between the given post
+     * and the user it was created by.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+}
+```
+
+
 ## Many to Many Relationships
 
 ### Controller
