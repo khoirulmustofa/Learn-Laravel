@@ -1,6 +1,52 @@
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
+## One to One
 
+`User.php` model:
+
+```php
+namespace App;
+
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+
+class User extends Authenticatable
+{
+    use Notifiable;
+
+    /**
+     * Define the relationship between the given user and its profile.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function profile()
+    {
+        return $this->hasOne(Profile::class);
+    }
+}
+```
+
+`Profile.php` model:
+
+```php
+namespace App;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Profile extends Model
+{
+    /**
+     * Define the relationship between the given profile
+     * and the user it belongs to.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+}
+```
 
 ## Many to Many Relationships
 
@@ -86,7 +132,7 @@ try {
                     'teacher' => optional(optional($student->asramas->first())->teachers->first())->name,
                 ];
             });
-           
+
             // Sort the filtered collection by class and name
             $data['studentsSorted'] = $studentsMap->sortBy([
                 ['class', 'asc'],
@@ -100,7 +146,6 @@ try {
         }
 
 ```
-
 
 ### View
 
@@ -261,8 +306,3 @@ try {
 </html>
 
 ```
-
-
-
-
-
