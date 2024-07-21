@@ -1,66 +1,103 @@
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
 
-## About Laravel
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Many to Many Relationships
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+```php
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+try {
+            $academicYear = 20232024;
+            $semester = 1;
+            $status = 'active';
 
-## Learning Laravel
+            $data['classes'] = ClassModel::with(['students' => function ($query) use ($academicYear, $semester, $status) {
+                $query->wherePivot('academic_year', $academicYear)
+                    ->wherePivot('semester', $semester)
+                    ->wherePivot('status', $status)
+                    ->orderBy('name')
+                    ->with(['asramas' => function ($query2) use ($academicYear, $semester, $status) {
+                        $query2->wherePivot('academic_year', $academicYear)
+                            ->wherePivot('semester', $semester)
+                            ->wherePivot('status', $status);
+                    }]);
+            }])->get();
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+            $data['asramas'] = Asrama::with(['students' => function ($query) use ($academicYear, $semester, $status) {
+                $query->wherePivot('academic_year', $academicYear)
+                    ->wherePivot('semester', $semester)
+                    ->wherePivot('status', $status)
+                    ->orderBy('name');
+            }, 'teachers' => function ($query3) use ($academicYear, $semester) {
+                $query3->wherePivot('academic_year', $academicYear)
+                    ->wherePivot('semester', $semester)
+                    ->with('profile');
+            }])->get();
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+            $data['asramaSingle'] = Asrama::with(['students' => function ($query) use ($academicYear, $semester, $status) {
+                $query->wherePivot('academic_year', $academicYear)
+                    ->wherePivot('semester', $semester)
+                    ->wherePivot('status', $status)
+                    ->orderBy('name')
+                    ->with(['classes' => function ($query2) use ($academicYear, $semester, $status) {
+                        $query2->wherePivot('academic_year', $academicYear)
+                            ->wherePivot('semester', $semester)
+                            ->wherePivot('status', $status);
+                    }]);
+            }])->find(17);
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+            $data['studentSingle'] = Student::with(['classes' => function ($query) use ($academicYear, $semester, $status) {
+                $query->wherePivot('academic_year', $academicYear)
+                    ->wherePivot('semester', $semester)
+                    ->wherePivot('status', $status);
+            }, 'asramas' => function ($query) use ($academicYear, $semester, $status) {
+                $query->wherePivot('academic_year', $academicYear)
+                    ->wherePivot('semester', $semester)
+                    ->wherePivot('status', $status);
+            }])->find(1);
 
-## Laravel Sponsors
+            $students  = Student::with(['classes' => function ($query4) use ($academicYear, $semester, $status) {
+                $query4->wherePivot('academic_year', $academicYear)
+                    ->wherePivot('semester', $semester)
+                    ->wherePivot('status', $status)
+                    ->orderBy('name');
+            }, 'asramas' => function ($query5) use ($academicYear, $semester, $status) {
+                $query5->wherePivot('academic_year', $academicYear)
+                    ->wherePivot('semester', $semester)
+                    ->wherePivot('status', $status)
+                    ->with(['teachers' => function ($query3) use ($academicYear, $semester) {
+                        $query3->wherePivot('academic_year', $academicYear)
+                            ->wherePivot('semester', $semester)
+                            ->with('profile');
+                    }]);
+            }])
+                ->orderBy('name')
+                ->get();
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+            $data['students'] =  $students;
 
-### Premium Partners
+            $studentsMap = $students->map(function ($student) {
+                return [
+                    'name' => $student->name,
+                    'class' => $student->classes->first()->name,
+                    'asrama' => optional($student->asramas->first())->name,
+                    'teacher' => optional(optional($student->asramas->first())->teachers->first())->name,
+                ];
+            });
+           
+            // Sort the filtered collection by class and name
+            $data['studentsSorted'] = $studentsMap->sortBy([
+                ['class', 'asc'],
+                ['name', 'asc'],
+            ]);
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+            // return  response()->json($data);
+            return  view('many_to_many', $data);
+        } catch (\Exception $ex) {
+            Log::error($ex->getMessage());
+        }
 
-## Contributing
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 
-## Code of Conduct
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
