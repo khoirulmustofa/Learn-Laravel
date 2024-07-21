@@ -100,9 +100,8 @@ class Post extends Model
 
 ## Many to Many Relationships
 
-### Controller
 
-`Model`
+### Model
 
 ```php
 
@@ -137,6 +136,8 @@ class Student extends Model
 
 
 ```
+
+### Controller
 
 ```php
 
