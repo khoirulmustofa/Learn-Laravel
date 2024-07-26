@@ -37,4 +37,13 @@ class Student extends Model
         return $this->hasMany(KbmPresensi::class);
     }
 
+    public function classStudent()
+    {
+        return $this->hasMany(ClassStudent::class,'student_id','id');
+    }
+
+    public function guardians()
+    {
+        return $this->belongsToMany(Guardian::class, 'guardian_student', 'student_id', 'guardian_id');
+    }
 }

@@ -82,5 +82,10 @@ class User extends Authenticatable
                     ->withPivot('academic_year', 'semester');
     }
 
+    public function guardian()
+    {
+        return $this->hasOne(Guardian::class,'user_id','id');
+    }
+
    
 }

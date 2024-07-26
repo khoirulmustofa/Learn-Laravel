@@ -13,10 +13,11 @@ class StudentSeeder extends Seeder
      */
     public function run(): void
     {
+        $no = 1;
         for ($i = 0; $i < 400; $i++) {
             Student::create(
                 [
-                    'name' => fake()->unique()->name(),
+                    'name' => "Students $no".fake()->unique()->name(),
                     'email' => fake()->unique()->safeEmail(),
                     'phone_number' => fake()->phoneNumber(),
                     'date_of_birth' => fake()->date(),
@@ -24,6 +25,8 @@ class StudentSeeder extends Seeder
                     'gender' => fake()->randomElement(['male', 'female']),
                 ]
             );
+
+            $no++;
         }
     }
 }
