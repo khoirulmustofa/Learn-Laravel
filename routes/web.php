@@ -5,6 +5,7 @@ use App\Http\Controllers\ManyToManyController;
 use App\Http\Controllers\OneToManyController;
 use App\Http\Controllers\OneToOneController;
 use App\Http\Controllers\PresensiController;
+use App\Http\Controllers\StudentsController;
 use App\Models\Asrama;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
@@ -24,4 +25,6 @@ Route::get('/presensi', [PresensiController::class, 'index']);
 
 Route::get('/guardian-student', [GuardianStudentController::class, 'index']);
 
+Route::get('/students', [StudentsController::class, 'index'])->name('students.index');
 
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
