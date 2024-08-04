@@ -25,6 +25,6 @@ Route::get('/presensi', [PresensiController::class, 'index']);
 
 Route::get('/guardian-student', [GuardianStudentController::class, 'index']);
 
-Route::get('/students', [StudentsController::class, 'index'])->name('students.index');
+// Route::get('/students', [StudentsController::class, 'index'])->name('students.index');
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

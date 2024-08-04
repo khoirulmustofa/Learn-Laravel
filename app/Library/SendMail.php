@@ -1,31 +1,26 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Library;
 
-// use App\Library\SendMail;
-use Illuminate\Http\Request;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
-use PHPMailer\PHPMailer\Exception;
 
-class HomeController extends Controller
+class SendMail
 {
     /**
-     * Create a new controller instance.
-     *
-     * @return void
+     * Create a new class instance.
      */
     public function __construct()
     {
-        // $this->middleware('auth');
+        //
     }
 
     /**
-     * Show the application dashboard.
+     * Execute the console command.
      *
-     * @return \Illuminate\Contracts\Support\Renderable
+     * @return mixed
      */
-    public function index()
+    public function handle()
     {
         $mail = new PHPMailer(true);
 
@@ -48,7 +43,7 @@ class HomeController extends Controller
             // $mail->addCC('cc@example.com');
             // $mail->addBCC('bcc@example.com');
 
-
+            
             //Content
             $mail->isHTML(true);                                  //Set email format to HTML
             $mail->Subject = 'Here is the subject';
@@ -57,7 +52,7 @@ class HomeController extends Controller
 
             $mail->send();
             echo 'Message has been sent';
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
         }
     }
