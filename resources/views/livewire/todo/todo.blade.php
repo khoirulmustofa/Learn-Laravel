@@ -15,7 +15,7 @@
         <div class="col-md-7 col-lg-8">
             <h4 class="d-flex justify-content-between align-items-center mb-3">
                 <span class="text-primary">List Todo</span>
-                <span class="badge bg-primary rounded-pill">{{ $todos->count() }}</span>
+                <span class="badge bg-primary rounded-pill">{{ $todos->total() }}</span>
             </h4>
             <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Search here ...">
             <hr>

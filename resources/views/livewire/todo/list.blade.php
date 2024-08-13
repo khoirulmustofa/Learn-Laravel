@@ -20,14 +20,40 @@
             </td>
             <td>
 
+                @if ($todoId === $todo->id)
+                <div>
+                    <input wire:model='newName' type="text" class="form-control" placeholder="Update todo ..">
+                    @error('newName')
+                    <code>{{ $message}}</code>
+                    @enderror
+                </div>
+
+                @else
+                @if ($todo->completed)
+                <p class="fw-semibold text-decoration-line-through">{{ $todo->name }}</p>
+                @else
                 <p class="fw-semibold">{{ $todo->name }}</p>
+                @endif
+                
                 <p class="fw-light">{{ $todo->created_at }}</p>
+                @endif
+
+
             </td>
             <td>
+
+                @if ($todoId === $todo->id)
                 <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
-                    <button type="button" class="btn btn-warning">Edit</button>
-                    <button type="button" class="btn btn-danger">Delete</button>
+                    <button wire:click="update" type="button" class="btn btn-success">Update</button>
+                    <button wire:click="cancel" type="button" class="btn btn-secondary">Cancel</button>
                 </div>
+                @else
+                <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
+                    <button wire:click="edit({{ $todo->id }})" type="button" class="btn btn-warning">Edit</button>
+                    <button wire:click="delete({{ $todo->id }})" wire:confirm="Are you sure you want to delete this todo?" type="button" class="btn btn-danger">Delete</button>
+                </div>
+                @endif
+
             </td>
         </tr>
         @empty
