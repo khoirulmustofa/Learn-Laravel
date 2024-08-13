@@ -12,4 +12,9 @@ class ClassStudent extends Model
     protected $primaryKey = 'id';
     public $incrementing = true;
     public $timestamps = true;
+
+    public function students()
+    {
+        return $this->belongsTo(Student::class, 'student_id', 'id');
+    }
 }

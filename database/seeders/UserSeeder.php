@@ -16,14 +16,17 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
+        $no = 1;
         for ($i = 0; $i < 100; $i++) {
             User::firstOrCreate([
-                'name' => "User $i " . fake()->name(),
+                'name' => "User $no " . fake()->name(),
                 'email' => fake()->unique()->safeEmail(),
                 'email_verified_at' => now(),
                 'password' =>  Hash::make('password'),
                 'remember_token' => Str::random(10),
             ]);
+
+            $no++;
         }
     }
 }
