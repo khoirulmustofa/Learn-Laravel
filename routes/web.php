@@ -1,30 +1,23 @@
 <?php
 
-use App\Http\Controllers\GuardianStudentController;
-use App\Http\Controllers\ManyToManyController;
-use App\Http\Controllers\OneToManyController;
-use App\Http\Controllers\OneToOneController;
-use App\Http\Controllers\PresensiController;
-use App\Http\Controllers\StudentsController;
-use App\Models\Asrama;
-use App\Models\User;
+use App\Livewire\Clicker;
+use App\Livewire\DataBinding;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-        $asramas = Asrama::all();
-        return $userIds = User::limit($asramas->count())->orderBy('id')->pluck('id')->toArray();
-});
+Route::view('/', 'welcome');
 
-Route::get('/one-to-one', [OneToOneController::class, 'index']);
-Route::get('/one-to-many', [OneToManyController::class, 'index']);
+Route::view('dashboard', 'dashboard')
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
+
+Route::view('profile', 'profile')
+    ->middleware(['auth'])
+    ->name('profile');
+
+    Route::get('/clicker', Clicker::class);
 
 
-Route::get('/many-to-many', [ManyToManyController::class, 'index']);
+    Route::get('/databinding', DataBinding::class);
 
-Route::get('/presensi', [PresensiController::class, 'index']);
-
-Route::get('/guardian-student', [GuardianStudentController::class, 'index']);
-
-// Route::get('/students', [StudentsController::class, 'index'])->name('students.index');
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    
+require __DIR__.'/auth.php';

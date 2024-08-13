@@ -10,7 +10,26 @@ php artisan key:generate
 
 php artisan migrate
 
+php artisan migrate:fresh --seed
+
 php artisan db:seed
+
+
+php artisan cache:clear
+php artisan view:clear
+php artisan route:clear
+php artisan clear-compiled
+php artisan config:cache
+
+
+php artisan optimize:clear
+
+docker-compose up --build -d
+docker-compose exec db /bin/bash
+
+sudo chmod -R 775 storage bootstrap/cache
+sudo chown -R www-data:www-data storage bootstrap/cache
+
 
 
 ````
