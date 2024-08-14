@@ -17,7 +17,7 @@
                 <span class="text-primary">List Todo</span>
                 <span class="badge bg-primary rounded-pill">{{ $todos->total() }}</span>
             </h4>
-            <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Search here ...">
+            <input wire:model.live.debounce.500ms="search" type="text" class="form-control" id="exampleFormControlInput1" placeholder="Search here ...">
             <hr>
             @include('livewire.todo.list')
             {{ $todos->links() }}
