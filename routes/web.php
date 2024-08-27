@@ -12,7 +12,6 @@ Route::view('dashboard', 'dashboard')
 Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
-
 Route::get('/todo', App\Livewire\Todo::class);
 
 require __DIR__ . '/auth.php';
