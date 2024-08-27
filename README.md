@@ -15,6 +15,9 @@ php artisan migrate:fresh --seed
 php artisan db:seed
 
 
+php artisan serve --port=8000
+
+
 php artisan cache:clear
 php artisan view:clear
 php artisan route:clear

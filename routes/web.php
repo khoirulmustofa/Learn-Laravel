@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\Todo;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome');
@@ -12,4 +13,6 @@ Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
 
-require __DIR__.'/auth.php';
+Route::get('/todo', App\Livewire\Todo::class);
+
+require __DIR__ . '/auth.php';
